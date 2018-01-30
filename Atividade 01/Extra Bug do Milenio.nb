@@ -1,0 +1,34 @@
+g[x_] := E^(x) - E^(-x) - 3*x;
+dg[x_] := -3 + E^(-x) + E^x;
+Plot[{g[x], dg[x]}, {x, -2, 2}, PlotTheme -> "Scientific"]
+Clear[l, u, k];
+
+
+l = -1.0;
+u = 1.0;
+x0 = 1.45;
+x1 = 0.0;
+k = 1;
+maxit = 500;
+eps = 0.000001;
+If[(g[l]*g[u]) < 0,
+  x0 = u;
+  k = 0;
+  Print["Condição Inicial Atendida, g(u)*g(l)<0."];
+  While[k <= maxit,
+   If[Abs[g[x0]] < eps || u - l < eps,
+    Print["x0=", x0];
+    Break[]];
+   x1 = x0 - (g[x0]/dg[x0]);
+   If[l < x1 < u && (Abs[g[x1]] <= 0.99*Abs[g[x0]]),
+    x0 = x1,
+    x0 = (l + u)/2;
+    If[g[l]*g[x0] < 0,
+     u = x0,
+     l = x0;
+     ];
+    ];
+   k++;
+   ];,
+  Print["Condição Inicial Não Atendida, g(u)*g(l)=>0."]
+  ];
